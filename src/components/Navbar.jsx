@@ -91,6 +91,7 @@ const Navbar = () => {
                       : "text-gray-600 hover:text-sky-400"
                   }`
                 }
+                onClick={() => setIsMenuOpen(false)}
               >
                 {({ isActive }) => (
                   <span
@@ -105,6 +106,14 @@ const Navbar = () => {
                 )}
               </NavLink>
             ))}
+
+            <Link
+              to="/login"
+              className="text-white text-center bg-sky-400 hover:bg-sky-800 font-semibold px-4 py-2 rounded-md transition-colors duration-300"
+              onClick={() => setIsMenuOpen(false)}
+            >
+              Login
+            </Link>
           </div>
         </div>
       </nav>
