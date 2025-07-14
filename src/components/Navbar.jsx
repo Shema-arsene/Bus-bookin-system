@@ -1,0 +1,109 @@
+import React, { useState } from "react"
+import { Link, NavLink } from "react-router-dom"
+import { Menu, X } from "lucide-react"
+
+const Navbar = () => {
+  const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const toggleMenu = () => {
+    setIsMenuOpen(!isMenuOpen)
+  }
+
+  return (
+    <header className="flex items-center justify-between py-4 px-10 bg-white border-b border-gray-300 text-black">
+      <img src="./public/logo.jpg" alt="Logo" className="h-12" />
+      <nav>
+        {/* Desktop Menu */}
+        <div className="hidden md:flex space-x-6 items-center">
+          {[
+            { to: "/", label: "Home" },
+            { to: "/about", label: "About" },
+            { to: "/faq", label: "FAQs" },
+            { to: "/booking", label: "Booking" },
+            { to: "/contact", label: "Contact Us" },
+          ].map(({ to, label }) => (
+            <NavLink
+              key={to}
+              to={to}
+              className={({ isActive }) =>
+                `group relative text-base font-semibold transition-colors duration-300 ${
+                  isActive ? "text-sky-400" : "text-gray-600 hover:text-sky-400"
+                }`
+              }
+            >
+              {({ isActive }) => (
+                <span
+                  className={`relative before:absolute before:left-0 before:-bottom-1 before:h-[2px] before:bg-sky-400 before:transition-all before:duration-300 ${
+                    isActive
+                      ? "before:w-full"
+                      : "before:w-0 group-hover:before:w-full"
+                  }`}
+                >
+                  {label}
+                </span>
+              )}
+            </NavLink>
+          ))}
+        </div>
+
+        {/* Toggle Menu Button */}
+        <button
+          onClick={toggleMenu}
+          className="md:hidden text-black hover:text-sky-400 cursor-pointer transition-colors duration-500"
+        >
+          {isMenuOpen ? (
+            <X className="h-8 w-8 font-bold" />
+          ) : (
+            <Menu className="h-8 w-8 font-bold" />
+          )}
+        </button>
+
+        {/* Mobile Menu */}
+        <div
+          className={`${
+            isMenuOpen ? "translate-x-0" : "translate-x-[99%]"
+          } overflow-auto fixed h-full top-0 right-0 z-20 bg-gray-100 shadow-2xl pt-20 pb-4 px-4 w-full max-w-[350px] duration-1000`}
+        >
+          <X
+            onClick={toggleMenu}
+            className="absolute -top-5 right-4 text-black hover:text-sky-400 h-10 w-10 font-bold my-10 cursor-pointer duration-500"
+          />
+          <div className="flex flex-col space-y-4">
+            {[
+              { to: "/", label: "Home" },
+              { to: "/about", label: "About" },
+              { to: "/faq", label: "FAQs" },
+              { to: "/booking", label: "Booking" },
+              { to: "/contact", label: "Contact Us" },
+            ].map(({ to, label }) => (
+              <NavLink
+                key={to}
+                to={to}
+                className={({ isActive }) =>
+                  `group relative text-base font-semibold transition-colors duration-300 ${
+                    isActive
+                      ? "text-sky-400"
+                      : "text-gray-600 hover:text-sky-400"
+                  }`
+                }
+              >
+                {({ isActive }) => (
+                  <span
+                    className={`relative before:absolute before:left-0 before:-bottom-1 before:h-[2px] before:bg-sky-400 before:transition-all before:duration-300 ${
+                      isActive
+                        ? "before:w-full"
+                        : "before:w-0 group-hover:before:w-full"
+                    }`}
+                  >
+                    {label}
+                  </span>
+                )}
+              </NavLink>
+            ))}
+          </div>
+        </div>
+      </nav>
+    </header>
+  )
+}
+
+export default Navbar
