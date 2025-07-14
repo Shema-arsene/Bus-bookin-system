@@ -1,8 +1,10 @@
 const express = require("express")
 const dotenv = require("dotenv")
 const mongoose = require("mongoose")
-const busRoutes = require("./routes/busRoutes")
 const connectDB = require("./config/db")
+const busRoutes = require("./routes/busRoutes")
+const bookingRoutes = require("./routes/bookingRoutes")
+const userRoutes = require("./routes/userRoutes")
 
 const PORT = process.env.PORT || 5000
 
@@ -17,8 +19,10 @@ app.get("/", (req, res) => {
 
 // Routes
 app.use("/api/buses", busRoutes)
+app.use("/api/bookings", bookingRoutes)
+app.use("/api/users", userRoutes)
 
-// connectDB()
+connectDB()
 
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`)
