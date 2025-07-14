@@ -13,6 +13,13 @@ import NotFoundPage from "./pages/NotFoundPage"
 import AgencyForm from "./Pages/Admin/AgencyForm"
 import RequireAuth from "./components/RequireAuth" // Auth protection
 
+// Admin Routes
+import AdminRoute from "./components/AdminRoute"
+import AdminLayout from "./Layouts/AdminLayout"
+import AdminDashboardPage from "./Pages/Admin/AdminDashboardPage"
+import AdminBusesPage from "./Pages/Admin/AdminBusesPage"
+import AdminBusFormPage from "./Pages/Admin/AdminBusFormPage"
+
 function App() {
   return (
     <Router>
@@ -32,10 +39,20 @@ function App() {
           <Route element={<RequireAuth />}>
             <Route path="/agency-form" element={<AgencyForm />} />
           </Route>
-
-          {/* 404 Route */}
-          <Route path="*" element={<NotFoundPage />} />
         </Route>
+
+        {/* Admin Routes */}
+        <Route element={<AdminRoute />}>
+          <Route path="/admin" element={<AdminLayout />}>
+            <Route index element={<AdminDashboardPage />} />
+            <Route path="buses" element={<AdminBusesPage />} />
+            <Route path="buses/new" element={<AdminBusFormPage />} />
+            <Route path="buses/edit/:id" element={<AdminBusFormPage />} />
+          </Route>
+        </Route>
+
+        {/* 404 Route */}
+        <Route path="*" element={<NotFoundPage />} />
       </Routes>
     </Router>
   )
