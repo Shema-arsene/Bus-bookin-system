@@ -29,6 +29,8 @@ const RegisterPage = () => {
       alert("Password must be at least 6 characters")
       return
     }
+
+    navigate("/")
   }
 
   const toggleShowPassword = () => {
