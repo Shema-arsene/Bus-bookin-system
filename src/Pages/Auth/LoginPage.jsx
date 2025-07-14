@@ -23,6 +23,8 @@ const LoginPage = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault()
+
+    validate()
   }
 
   return (
