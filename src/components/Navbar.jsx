@@ -43,6 +43,12 @@ const Navbar = () => {
               )}
             </NavLink>
           ))}
+          <Link
+            to="/login"
+            className="text-white bg-sky-400 hover:bg-sky-800 font-semibold px-4 py-2 rounded-md transition-colors duration-300"
+          >
+            Login
+          </Link>
         </div>
 
         {/* Toggle Menu Button */}
