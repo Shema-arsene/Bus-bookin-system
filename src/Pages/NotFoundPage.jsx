@@ -6,7 +6,7 @@ const NotFoundPage = () => {
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col justify-center items-center px-4 py-12">
       <div className="text-center">
-        <h1 className="text-9xl font-bold text-red-600">404</h1>
+        <h1 className="text-9xl font-bold text-blue-600">404</h1>
         <h2 className="text-3xl font-bold text-gray-900 mt-4 mb-6">
           Page Not Found
         </h2>
@@ -18,20 +18,19 @@ const NotFoundPage = () => {
         <div className="flex flex-col sm:flex-row justify-center space-y-4 sm:space-y-0 sm:space-x-4">
           <Link
             to="/"
-            className="flex items-center justify-center gap-2 font-medium bg-black text-red-600 py-3 px-6 rounded-lg border-2 border-black
-                      hover:border-red-600 hover:bg-transparent transition-colors"
+            className="flex items-center justify-center gap-2 font-medium bg-blue-600 text-white py-3 px-6 rounded-lg hover:bg-blue-900 transition-colors"
           >
             <Home className="h-5 w-5" />
             <span>Back to Home</span>
           </Link>
 
           <Link
-            to="/products"
-            className="flex items-center justify-center gap-2 font-medium bg-white text-black py-3 px-6 rounded-lg border-2 border-black
+            to="/booking"
+            className="flex items-center justify-center gap-2 font-medium bg-white text-blue-600 py-3 px-6 rounded-lg border-2 border-blue-600
                       hover:bg-gray-50 transition-colors"
           >
             <Search className="h-5 w-5" />
-            <span>Browse Products</span>
+            <span>Book Trip</span>
           </Link>
         </div>
       </div>
