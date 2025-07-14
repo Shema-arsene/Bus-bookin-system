@@ -1,7 +1,6 @@
 const express = require("express")
 const dotenv = require("dotenv")
 const mongoose = require("mongoose")
-// const busRoutes = require("./routes/busRoutes.js")
 const busRoutes = require("./routes/busRoutes")
 const connectDB = require("./config/db")
 
@@ -12,12 +11,12 @@ dotenv.config()
 const app = express()
 app.use(express.json()) // Parse incoming JSON
 
-// app.get("/", (req, res) => {
-//   res.send("Bus Booking API Running")
-// })
+app.get("/", (req, res) => {
+  res.send("Bus Booking API Running")
+})
 
 // Routes
-// app.use("/api/buses", busRoutes)
+app.use("/api/buses", busRoutes)
 
 // connectDB()
 
