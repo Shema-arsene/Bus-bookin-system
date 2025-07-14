@@ -36,9 +36,9 @@ function App() {
           <Route path="register" element={<RegisterPage />} />
 
           {/* Protected Routes */}
-          <Route element={<RequireAuth />}>
+          {/* <Route element={<RequireAuth />}>
             <Route path="/agency-form" element={<AgencyForm />} />
-          </Route>
+          </Route> */}
         </Route>
 
         {/* Admin Routes */}
