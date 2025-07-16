@@ -2,6 +2,7 @@ const express = require("express")
 const dotenv = require("dotenv")
 const connectDB = require("./config/db")
 const authRoutes = require("./routes/authRoutes")
+const journeyRoutes = require("./routes/journeyRoutes")
 const busRoutes = require("./routes/busRoutes")
 const bookingRoutes = require("./routes/bookingRoutes")
 const userRoutes = require("./routes/userRoutes")
@@ -19,6 +20,7 @@ app.get("/", (req, res) => {
 
 // Routes
 app.use("/api/auth", authRoutes)
+app.use("/api/journeys", journeyRoutes)
 app.use("/api/buses", busRoutes)
 app.use("/api/bookings", bookingRoutes)
 app.use("/api/users", userRoutes)
