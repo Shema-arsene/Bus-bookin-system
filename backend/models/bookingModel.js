@@ -7,9 +7,9 @@ const bookingSchema = new mongoose.Schema(
       ref: "User",
       required: true,
     },
-    bus: {
+    journey: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Bus",
+      ref: "Journey",
       required: true,
     },
     seatsBooked: {
@@ -17,9 +17,13 @@ const bookingSchema = new mongoose.Schema(
       required: true,
       min: 1,
     },
-    totalAmount: {
+    totalPrice: {
       type: Number,
       required: true,
+    },
+    bookingTime: {
+      type: Date,
+      default: Date.now,
     },
     status: {
       type: String,
