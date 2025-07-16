@@ -39,4 +39,42 @@ const bookSeats = async (req, res) => {
   }
 }
 
-module.exports = { bookSeats }
+const cancelBooking = async (req, res) => {
+  try {
+    const booking = await Booking.findById(req.params.id)
+
+    if (!booking) {
+      return res.status(404).json({ message: "Booking not found" })
+    }
+
+    // Only allow the user who made the booking to cancel
+    if (booking.user.toString() !== req.user._id.toString()) {
+      return res
+        .status(403)
+        .json({ message: "Not authorized to cancel this booking" })
+    }
+
+    if (booking.status === "Cancelled") {
+      return res.status(400).json({ message: "Booking is already cancelled" })
+    }
+
+    // Update booking status
+    booking.status = "Cancelled"
+    await booking.save()
+
+    // Restore seats to the journey
+    const journey = await Journey.findById(booking.journey)
+    if (journey) {
+      journey.seatsAvailable += booking.seatsBooked
+      await journey.save()
+    }
+
+    res.status(200).json({ message: "Booking cancelled successfully", booking })
+  } catch (error) {
+    res
+      .status(500)
+      .json({ message: "Failed to cancel booking", error: error.message })
+  }
+}
+
+module.exports = { bookSeats, cancelBooking }
