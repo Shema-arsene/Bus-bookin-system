@@ -46,21 +46,26 @@ const registerUser = async (req, res) => {
 // Login user
 const loginUser = async (req, res) => {
   const { email, password } = req.body
+
+  // Validation: Check for missing fields
+  if (!email || !password) {
+    return res.status(400).json({ message: "All fields are required" })
+  }
+
   try {
     const user = await User.findOne({ email })
-    if (!user || !(await user.matchPassword(password))) {
+
+    if (!user || !(await user.comparePassword(password))) {
       return res.status(401).json({ message: "Invalid credentials" })
     }
 
     res.json({
       _id: user._id,
-      name: user.name,
-      email: user.email,
-      role: user.role,
+      user,
       token: generateToken(user._id),
     })
   } catch (error) {
-    res.status(500).json({ message: "Server error" })
+    res.status(500).json({ message: "Server error", error: error.message })
   }
 }
 
