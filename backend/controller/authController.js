@@ -71,16 +71,19 @@ const loginUser = async (req, res) => {
 
 // Get user info
 const getUserInfo = async (req, res) => {
-  const user = req.user
-  if (!user) {
-    return res.status(401).json({ message: "Not authorized" })
+  const id = req.user._id
+
+  try {
+    const user = await User.findById(id).select("-password")
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" })
+    }
+
+    res.status(200).json(user)
+  } catch (error) {
+    res.status(500).json({ message: "Server error", error: error.message })
   }
-  res.json({
-    _id: user._id,
-    name: user.name,
-    email: user.email,
-    role: user.role,
-  })
 }
 
 module.exports = {
