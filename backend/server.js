@@ -1,6 +1,5 @@
 const express = require("express")
 const dotenv = require("dotenv")
-const mongoose = require("mongoose")
 const connectDB = require("./config/db")
 const busRoutes = require("./routes/busRoutes")
 const bookingRoutes = require("./routes/bookingRoutes")
