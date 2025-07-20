@@ -2,20 +2,6 @@ import { useParams } from "react-router-dom"
 import AgencyForm from "./AgencyForm"
 import { Link, useNavigate } from "react-router-dom"
 
-// const  = () => {
-//   const { id } = useParams()
-//   const isEdit = Boolean(id)
-
-//   return (
-// <div className="p-6">
-//   {isEdit ? "Edit Bus Information" : "Create New Bus"}
-// </div>
-;<AgencyForm />
-
-//   )
-// }
-// export default AdminBusFormPage
-
 import React, { useState, useEffect } from "react"
 import { ArrowLeft } from "lucide-react"
 
