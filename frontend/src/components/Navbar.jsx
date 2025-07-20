@@ -4,7 +4,7 @@ import { Menu, User, X } from "lucide-react"
 import { useAuth } from "../context/AuthContext"
 
 const Navbar = () => {
-  const { isAuthenticated, user } = useAuth()
+  const { isAuthenticated, user, logout } = useAuth()
 
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const toggleMenu = () => {
@@ -28,11 +28,9 @@ const Navbar = () => {
     }
   }, [])
 
-  console.log("User info:", user)
-
   return (
     <header className="flex items-center justify-between py-4 px-10 bg-white border-b border-gray-300 text-black">
-      <img src="./public/logo.jpg" alt="Logo" className="h-12" />
+      <img src="./public/logo.jpg" alt="Logo" className="h-12 w-24" />
       <nav>
         {/* Desktop Menu */}
         <div className="hidden md:flex space-x-6 items-center">
@@ -49,7 +47,7 @@ const Navbar = () => {
               className={({ isActive }) =>
                 `group relative text-base font-semibold transition-colors duration-300 ${
                   isActive ? "text-sky-400" : "text-gray-600 hover:text-sky-400"
-                }`
+                } whitespace-nowrap`
               }
             >
               {({ isActive }) => (
@@ -68,14 +66,14 @@ const Navbar = () => {
           {isAuthenticated ? (
             <>
               <div
-                className="relative flex items-center justify-center cursor-pointer mx-10"
+                className="relative flex items-center justify-center gap-1.5 cursor-pointer mx-10"
                 onClick={() => setIsUserMenuOpen((prev) => !prev)}
                 ref={userMenuRef}
               >
                 <User />
                 <button
                   onClick={() => setIsUserMenuOpen((prev) => !prev)}
-                  className="flex items-center space-x-1 text-gray-600 hover:text-red-600 transition-colors"
+                  className="flex items-center space-x-1 text-black hover:text-gray-600 transition-colors"
                 >
                   <span
                     className="text-sm font-medium uppercase whitespace-nowrap cursor-pointer"
@@ -88,27 +86,19 @@ const Navbar = () => {
                 {isUserMenuOpen && (
                   <div className="absolute top-10 -right-4 mt-2 w-48 bg-white rounded-md shadow-xl z-10 overflow-hidden">
                     <NavLink
-                      to="/profile"
-                      className="block px-4 py-2 text-sm text-gray-700 hover:bg-red-100"
+                      to="/admin"
+                      className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                       onClick={() => setIsUserMenuOpen(false)}
                     >
-                      Profile
+                      Admin Dashboard
                     </NavLink>
-                    {user && (
-                      <NavLink
-                        to="/admin"
-                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-red-100"
-                        onClick={() => setIsUserMenuOpen(false)}
-                      >
-                        Admin Dashboard
-                      </NavLink>
-                    )}
+
                     <button
                       onClick={() => {
                         logout()
                         setIsUserMenuOpen(false)
                       }}
-                      className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-red-100"
+                      className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                     >
                       Logout
                     </button>
@@ -126,12 +116,6 @@ const Navbar = () => {
               </Link>
             </>
           )}
-          {/* <Link
-            to="/login"
-            className="text-white bg-sky-400 hover:bg-sky-800 font-semibold px-4 py-2 rounded-md transition-colors duration-300"
-          >
-            Login
-          </Link> */}
         </div>
 
         {/* Toggle Menu Button */}
