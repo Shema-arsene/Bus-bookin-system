@@ -1,17 +1,15 @@
 import React, { createContext, useState, useEffect, useContext } from "react"
 import axiosInstance from "../utils/axiosInstance"
 import { API_PATHS } from "../utils/apiPaths"
-import { fetchFavorites } from "../redux/slices/favoritesSlice"
-import { useAppDispatch } from "../redux/hooks"
-
-const AuthContext = (createContext < AuthContextType) | (undefined > undefined)
+// const AuthContext = createContext | (undefined > undefined)
+const AuthContext = createContext(undefined)
 
 export const AuthProvider = ({ children }) => {
-  const [user, setUser] = (useState < User) | (null > null)
-  const [token, setToken] = (useState < string) | (null > null)
+  const [user, setUser] = useState(null)
+  const [token, setToken] = useState(null)
   const [loading, setLoading] = useState(true)
 
-  const dispatch = useAppDispatch()
+  // const dispatch = useAppDispatch()
 
   // Load token/user from localStorage on first mount
   useEffect(() => {
