@@ -55,13 +55,18 @@ export const AuthProvider = ({ children }) => {
   }
 
   // Register function
-  const register = async (fullName, email, password) => {
+  const register = async (fullName, email, password, phone) => {
+    console.log("Registering user:", { fullName, email, password, phone })
+
     try {
       const res = await axiosInstance.post(API_PATHS.AUTH.REGISTER, {
         fullName,
         email,
         password,
+        phone,
       })
+
+      console.log("Register response:", res.data)
 
       const { token, user } = res.data
 
@@ -74,6 +79,10 @@ export const AuthProvider = ({ children }) => {
       axiosInstance.defaults.headers.common["Authorization"] = `Bearer ${token}`
     } catch (error) {
       console.error("Register error:", error)
+      console.error(
+        "Registering error:",
+        error?.response?.data || error.message
+      )
       throw error
     }
   }
