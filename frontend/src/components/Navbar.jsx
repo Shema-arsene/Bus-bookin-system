@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react"
 import { Link, NavLink } from "react-router-dom"
-import { Menu, X } from "lucide-react"
+import { Menu, User, X } from "lucide-react"
 import { useAuth } from "../context/AuthContext"
 
 const Navbar = () => {
@@ -27,6 +27,9 @@ const Navbar = () => {
       document.removeEventListener("mousedown", handleClickOutside)
     }
   }, [])
+
+  console.log("User info:", user)
+
   return (
     <header className="flex items-center justify-between py-4 px-10 bg-white border-b border-gray-300 text-black">
       <img src="./public/logo.jpg" alt="Logo" className="h-12" />
@@ -75,7 +78,7 @@ const Navbar = () => {
                   className="flex items-center space-x-1 text-gray-600 hover:text-red-600 transition-colors"
                 >
                   <span
-                    className="text-sm font-medium uppercase"
+                    className="text-sm font-medium uppercase whitespace-nowrap cursor-pointer"
                     onClick={() => setIsUserMenuOpen((prev) => !prev)}
                   >
                     {user?.fullName}
@@ -91,7 +94,7 @@ const Navbar = () => {
                     >
                       Profile
                     </NavLink>
-                    {user?.role === "admin" && (
+                    {user && (
                       <NavLink
                         to="/admin"
                         className="block px-4 py-2 text-sm text-gray-700 hover:bg-red-100"
