@@ -60,8 +60,12 @@ const loginUser = async (req, res) => {
     }
 
     res.json({
-      _id: user._id,
-      user,
+      user: {
+        _id: user._id,
+        fullName: user.fullName,
+        email: user.email,
+        phone: user.phone,
+      },
       token: generateToken(user._id),
     })
   } catch (error) {
