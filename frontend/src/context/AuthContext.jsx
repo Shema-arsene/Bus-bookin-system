@@ -1,15 +1,12 @@
 import React, { createContext, useState, useEffect, useContext } from "react"
 import axiosInstance from "../utils/axiosInstance"
 import { API_PATHS } from "../utils/apiPaths"
-// const AuthContext = createContext | (undefined > undefined)
 const AuthContext = createContext(undefined)
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null)
   const [token, setToken] = useState(null)
   const [loading, setLoading] = useState(true)
-
-  // const dispatch = useAppDispatch()
 
   // Load token/user from localStorage on first mount
   useEffect(() => {
@@ -51,8 +48,6 @@ export const AuthProvider = ({ children }) => {
       setUser(user)
 
       axiosInstance.defaults.headers.common["Authorization"] = `Bearer ${token}`
-
-      dispatch(fetchFavorites())
     } catch (error) {
       console.error("Login error:", error)
       throw error
