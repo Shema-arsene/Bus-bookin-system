@@ -14,7 +14,7 @@ const AdminLayout = () => {
   return (
     <div className="min-h-screen flex">
       <aside className="w-64 flex flex-col bg-gray-800 text-white p-4 space-y-4">
-        <Link to="/admin" className="text-2xl font-bold my-3">
+        <Link to="/admin" className="text-2xl font-bold my-3 whitespace-nowrap">
           Admin Panel
         </Link>
         <nav className="flex flex-col space-y-2">
@@ -56,7 +56,28 @@ const AdminLayout = () => {
                     : "before:w-0 group-hover:before:w-full"
                 }`}
               >
-                Buses
+                Journeys
+              </span>
+            )}
+          </NavLink>
+
+          <NavLink
+            to="/admin/booking"
+            className={({ isActive }) =>
+              `group relative text-base font-semibold transition-colors duration-300 ${
+                isActive ? "text-sky-400" : "text-white hover:text-sky-400"
+              }`
+            }
+          >
+            {({ isActive }) => (
+              <span
+                className={`relative before:absolute before:left-0 before:-bottom-1 before:h-[2px] before:bg-sky-400 before:transition-all before:duration-300 ${
+                  isActive
+                    ? "before:w-full"
+                    : "before:w-0 group-hover:before:w-full"
+                }`}
+              >
+                Booking
               </span>
             )}
           </NavLink>
