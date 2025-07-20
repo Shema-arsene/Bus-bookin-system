@@ -9,7 +9,8 @@ export const API_PATHS = {
   },
   JOURNEYS: {
     GET_ALL_JOURNEYS: `${BASE_URL}/api/journeys/`,
-    GET_ALL_JOURNEYBYID: (journeyId) => `${BASE_URL}/api/journeys/${journeyId}`,
+    GET_ALL_JOURNEY_BY_ID: (journeyId) =>
+      `${BASE_URL}/api/journeys/${journeyId}`,
     ADD_JOURNEY: `${BASE_URL}/api/journeys/add`,
     UPDATE_JOURNEY: (journeyId) =>
       `${BASE_URL}/api/journeys/update/${journeyId}`,
