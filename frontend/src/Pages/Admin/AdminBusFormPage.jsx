@@ -1,9 +1,8 @@
-import { useParams } from "react-router-dom"
-import AgencyForm from "./AgencyForm"
-import { Link, useNavigate } from "react-router-dom"
-
 import React, { useState, useEffect } from "react"
+import { Link, useNavigate } from "react-router-dom"
 import { ArrowLeft } from "lucide-react"
+import axiosInstance from "../../utils/axiosInstance"
+import { API_PATHS } from "../../utils/apiPaths"
 
 const AdminBusFormPage = () => {
   const navigate = useNavigate()
@@ -13,12 +12,29 @@ const AdminBusFormPage = () => {
     from: "",
     to: "",
     price: "",
+    departureDay: "", // <-- new
     departureTime: "",
     arrivalTime: "",
     duration: "",
     busLicensePlate: "",
-    amenities: "",
   })
+
+  const [userId, setUserId] = useState("")
+  const [agencyName, setAgencyName] = useState("")
+
+  useEffect(() => {
+    const storedUser = JSON.parse(localStorage.getItem("user"))
+    if (storedUser?._id) {
+      setUserId(storedUser._id)
+    }
+  }, [])
+
+  useEffect(() => {
+    const storedUser = JSON.parse(localStorage.getItem("user"))
+    if (storedUser?.fullName) {
+      setAgencyName(storedUser.fullName)
+    }
+  }, [])
 
   // Function to calculate duration
   const calculateDuration = (departure, arrival) => {
@@ -52,28 +68,41 @@ const AdminBusFormPage = () => {
     setFormData((prev) => ({ ...prev, [name]: value }))
   }
 
-  const amenitiesList = [
-    "Wi-Fi",
-    "Charging Port",
-    "Reclining Seats",
-    "AC",
-    "Entertainment",
-    "Toilet",
-    "Comfortable Seats",
-  ]
-
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
-    console.log("Submitted travel info:", formData)
-    alert("Travel info submitted!")
+
+    const departureDateTime = new Date(
+      `${formData.departureDay}T${formData.departureTime}:00.000Z`
+    )
+    const arrivalDateTime = new Date(
+      `${formData.departureDay}T${formData.arrivalTime}:00.000Z`
+    )
+
+    const journeyData = {
+      busName: agencyName,
+      departure: formData.from,
+      destination: formData.to,
+      departureTime: departureDateTime.toISOString(),
+      arrivalTime: arrivalDateTime.toISOString(),
+      price: Number(formData.price),
+      seatsAvailable: 50,
+      busNumber: formData.busLicensePlate,
+      user: userId,
+    }
+
+    try {
+      await axiosInstance.post(API_PATHS.JOURNEYS.ADD_JOURNEY, journeyData)
+      alert("Journey added successfully!")
+      navigate("/admin/buses")
+    } catch (error) {
+      console.error("Error adding journey:", error)
+      alert("Failed to add journey")
+    }
   }
 
   return (
     <div className="min-h-screen bg-gray-100 py-10">
       <div className="max-w-2xl mx-auto bg-white p-8 rounded shadow">
-        {/* <h2 className="text-2xl text-center text-blue-600 font-bold mb-6">
-          Agency Travel Info Form
-        </h2> */}
         <div className="flex items-center justify-between mb-6">
           <Link
             to="/admin/buses"
@@ -85,17 +114,19 @@ const AdminBusFormPage = () => {
           <h1 className="text-2xl font-bold">Add New Journey</h1>
         </div>
         <form onSubmit={handleSubmit} className="space-y-4">
+          {/* Agency Name */}
           <input
             type="text"
             name="agency"
             placeholder="Agency Name"
-            value={formData.agency}
-            onChange={handleChange}
+            value={agencyName}
+            readOnly
             className="w-full p-3 border border-gray-300 rounded focus:outline-none focus:ring focus:ring-blue-600 focus:border-blue-600 sm:text-sm"
             required
           />
 
           <div className="grid grid-cols-2 gap-4">
+            {/* Departure */}
             <input
               type="text"
               name="from"
@@ -105,6 +136,8 @@ const AdminBusFormPage = () => {
               className="w-full p-3 border border-gray-300 rounded focus:outline-none focus:ring focus:ring-blue-600 focus:border-blue-600 sm:text-sm"
               required
             />
+
+            {/* Destination */}
             <input
               type="text"
               name="to"
@@ -116,6 +149,7 @@ const AdminBusFormPage = () => {
             />
           </div>
 
+          {/* Price */}
           <input
             type="number"
             name="price"
@@ -126,8 +160,8 @@ const AdminBusFormPage = () => {
             required
           />
 
-          {/* Arrival & Departure time */}
           <div className="grid grid-cols-2 gap-4">
+            {/* Departure time */}
             <div>
               <label className="text-sm text-gray-600 block mb-1">
                 Departure Time
@@ -142,6 +176,7 @@ const AdminBusFormPage = () => {
               />
             </div>
 
+            {/* Arrival Time */}
             <div>
               <label className="text-sm text-gray-600 block mb-1">
                 Arrival Time
@@ -157,6 +192,7 @@ const AdminBusFormPage = () => {
             </div>
           </div>
 
+          {/* Duration */}
           <input
             type="text"
             name="duration"
@@ -166,6 +202,22 @@ const AdminBusFormPage = () => {
             className="w-full p-3 border border-gray-300 rounded bg-gray-100 text-gray-600"
           />
 
+          {/* Departure date */}
+          <div>
+            <label className="text-sm text-gray-600 block mb-1">
+              Departure Day
+            </label>
+            <input
+              type="date"
+              name="departureDay"
+              value={formData.departureDay}
+              onChange={handleChange}
+              className="w-full p-3 border border-gray-300 rounded focus:outline-none focus:ring focus:ring-blue-600 focus:border-blue-600 sm:text-sm"
+              required
+            />
+          </div>
+
+          {/* License plate */}
           <input
             type="text"
             name="busLicensePlate"
@@ -175,29 +227,6 @@ const AdminBusFormPage = () => {
             className="w-full p-3 border border-gray-300 rounded focus:outline-none focus:ring focus:ring-blue-600 focus:border-blue-600 sm:text-sm"
             required
           />
-
-          {/* Amenities */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              Amenities
-            </label>
-            <div className="flex flex-wrap gap-3">
-              {amenitiesList.map((amenity) => (
-                <label
-                  key={amenity}
-                  className="flex items-center space-x-2 text-sm text-gray-700"
-                >
-                  <input
-                    type="checkbox"
-                    checked={formData.amenities.includes(amenity)}
-                    onChange={() => handleAmenityToggle(amenity)}
-                    className="rounded text-blue-600"
-                  />
-                  <span>{amenity}</span>
-                </label>
-              ))}
-            </div>
-          </div>
 
           <button
             type="submit"
