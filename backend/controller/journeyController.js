@@ -3,7 +3,10 @@ const Journey = require("../models/journeyModel")
 // Create a new journey
 const createJourney = async (req, res) => {
   try {
-    const journey = await Journey.create(req.body)
+    const journey = await Journey.create({
+      ...req.body,
+      user: req.user._id,
+    })
     res.status(201).json(journey)
   } catch (error) {
     res
@@ -21,6 +24,19 @@ const getAllJourneys = async (req, res) => {
     res
       .status(500)
       .json({ message: "Failed to fetch journeys", error: error.message })
+  }
+}
+
+// Get journeys by user
+const getJourneysByUser = async (req, res) => {
+  try {
+    const journeys = await Journey.find({ user: req.params.userId })
+    res.status(200).json(journeys)
+  } catch (error) {
+    res.status(500).json({
+      message: "Failed to fetch user's journeys",
+      error: error.message,
+    })
   }
 }
 
@@ -68,6 +84,7 @@ const deleteJourney = async (req, res) => {
 module.exports = {
   createJourney,
   getAllJourneys,
+  getJourneysByUser,
   getJourneyById,
   updateJourney,
   deleteJourney,
