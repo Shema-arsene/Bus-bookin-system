@@ -18,7 +18,8 @@ import AdminRoute from "./components/AdminRoute"
 import AdminLayout from "./Layouts/AdminLayout"
 import AdminDashboardPage from "./Pages/Admin/AdminDashboardPage"
 import AdminBusesPage from "./Pages/Admin/AdminBusesPage"
-import AdminBusFormPage from "./Pages/Admin/AdminBusFormPage"
+import AdminAddJourneyFormPage from "./Pages/Admin/AdminAddJourneyFormPage"
+import AdminEditJourneyFormPage from "./Pages/Admin/AdminEditJourneyFormPage"
 import { AuthProvider } from "./context/AuthContext"
 
 function App() {
@@ -48,8 +49,11 @@ function App() {
             <Route path="/admin" element={<AdminLayout />}>
               <Route index element={<AdminDashboardPage />} />
               <Route path="buses" element={<AdminBusesPage />} />
-              <Route path="buses/new" element={<AdminBusFormPage />} />
-              <Route path="buses/edit/:id" element={<AdminBusFormPage />} />
+              <Route path="buses/new" element={<AdminAddJourneyFormPage />} />
+              <Route
+                path="buses/edit/:id"
+                element={<AdminEditJourneyFormPage />}
+              />
             </Route>
           </Route>
 
