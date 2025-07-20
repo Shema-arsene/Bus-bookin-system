@@ -1,37 +1,67 @@
 import { Plus, BusFront, Trash2, Edit2 } from "lucide-react"
 import { Link } from "react-router-dom"
-
-const mockJourneys = [
-  {
-    id: "1",
-    agency: "RITCO Express",
-    origin: "Kigali",
-    destination: "Huye",
-    departureTime: "2025-07-15 08:00",
-    price: "6,000 RWF",
-    status: "Scheduled",
-  },
-  {
-    id: "2",
-    agency: "Volcano",
-    origin: "Kigali",
-    destination: "Musanze",
-    departureTime: "2025-07-15 09:30",
-    price: "5,500 RWF",
-    status: "Scheduled",
-  },
-  {
-    id: "3",
-    agency: "KBS",
-    origin: "Kigali",
-    destination: "Rubavu",
-    departureTime: "2025-07-14 18:00",
-    price: "7,000 RWF",
-    status: "Departed",
-  },
-]
+import { API_PATHS, BASE_URL } from "../../utils/apiPaths"
+import { useEffect, useState } from "react"
+import axiosInstance from "../../utils/axiosInstance"
 
 const AdminBusesPage = () => {
+  const [journeys, setJourneys] = useState([])
+  const [loading, setLoading] = useState(true)
+
+  const [userId, setUserId] = useState("")
+
+  useEffect(() => {
+    const storedUser = JSON.parse(localStorage.getItem("user"))
+
+    if (storedUser && storedUser._id) {
+      setUserId(storedUser._id)
+    }
+  }, [])
+
+  const fetchJourneys = async () => {
+    setLoading(true)
+
+    try {
+      const response = await axiosInstance.get(
+        `${API_PATHS.JOURNEYS.GET_ALL_JOURNEYS}`
+      )
+
+      setJourneys(response.data.user)
+
+      const filteredJourneys = response.data.filter(
+        (journey) => journey.user === userId
+      )
+      setJourneys(filteredJourneys)
+    } catch (error) {
+      console.error("Error fetching journeys:", error)
+      alert("Failed to load journeys")
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  useEffect(() => {
+    if (userId) {
+      fetchJourneys()
+    }
+  }, [userId])
+
+  const formatDateTime = (dateString) => {
+    const date = new Date(dateString)
+    return date.toLocaleString("en-KE", {
+      dateStyle: "medium",
+      timeStyle: "short",
+    })
+  }
+
+  const LoadingSpinner = () => (
+    <div className="flex justify-center items-center h-[70vh]">
+      <div className="w-16 h-16 border-4 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
+    </div>
+  )
+
+  if (loading) return <LoadingSpinner />
+
   return (
     <section className="p-6">
       <div className="flex justify-between items-center mb-6">
@@ -49,58 +79,73 @@ const AdminBusesPage = () => {
       </div>
 
       <div className="bg-white rounded-md shadow overflow-x-auto">
-        <table className="min-w-full table-auto">
-          <thead className="bg-gray-200 text-gray-700 text-sm">
-            <tr>
-              <th className="px-4 py-3 text-left">Bus Agency</th>
-              <th className="px-4 py-3 text-left">Route</th>
-              <th className="px-4 py-3 text-left">Departure</th>
-              <th className="px-4 py-3 text-left">Price</th>
-              <th className="px-4 py-3 text-left">Status</th>
-              <th className="px-4 py-3 text-right">Actions</th>
-            </tr>
-          </thead>
-          <tbody className="text-gray-700">
-            {mockJourneys.map((journey) => (
-              <tr
-                key={journey.id}
-                className="border-b hover:bg-gray-50 transition-colors"
-              >
-                <td className="px-4 py-3 flex items-center gap-2">
-                  <BusFront className="w-4 h-4 text-blue-500" />
-                  {journey.agency}
-                </td>
-                <td className="px-4 py-3">
-                  {journey.origin} → {journey.destination}
-                </td>
-                <td className="px-4 py-3">{journey.departureTime}</td>
-                <td className="px-4 py-3">{journey.price}</td>
-                <td className="px-4 py-3">
-                  <span
-                    className={`inline-block px-2 py-0.5 text-xs font-semibold rounded-full ${
-                      journey.status === "Scheduled"
-                        ? "bg-green-100 text-green-600"
-                        : "bg-gray-300 text-gray-600"
-                    }`}
-                  >
-                    {journey.status}
-                  </span>
-                </td>
-                <td className="px-4 py-3 text-right flex justify-end gap-2">
-                  <Link
-                    to={`/admin/buses/edit/${journey.id}`}
-                    className="text-blue-600 hover:text-blue-800"
-                  >
-                    <Edit2 className="w-4 h-4" />
-                  </Link>
-                  <button className="text-red-600 hover:text-red-800">
-                    <Trash2 className="w-4 h-4" />
-                  </button>
-                </td>
+        {loading ? (
+          <>
+            <LoadingSpinner />
+          </>
+        ) : journeys.length === 0 ? (
+          <>
+            <p className="p-4 text-gray-500">No journeys found.</p>
+          </>
+        ) : (
+          <table className="min-w-full table-auto">
+            <thead className="bg-gray-200 text-gray-700 text-sm">
+              <tr>
+                <th className="px-4 py-3 text-left">Bus Agency</th>
+                <th className="px-4 py-3 text-left">Route</th>
+                <th className="px-4 py-3 text-left">Departure</th>
+                <th className="px-4 py-3 text-left">Price</th>
+                <th className="px-4 py-3 text-left">Status</th>
+                <th className="px-4 py-3 text-right">Actions</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody className="text-gray-700">
+              {journeys.map((journey) => (
+                <tr
+                  key={journey._id}
+                  className="border-b hover:bg-gray-50 transition-colors"
+                >
+                  <td className="font-medium px-4 py-3 whitespace-nowrap flex items-center gap-2">
+                    {journey.busName}
+                  </td>
+                  <td className="px-4 py-3 whitespace-nowrap">
+                    {journey.departure} → {journey.destination}
+                  </td>
+                  <td className="px-4 py-3 whitespace-nowrap">
+                    {formatDateTime(journey.departureTime)}
+                  </td>
+                  <td className="px-4 py-3 whitespace-nowrap">
+                    {journey.price} rwf
+                  </td>
+                  <td className="px-4 py-3">
+                    <span
+                      className={`inline-block px-2 py-0.5 text-xs font-semibold rounded-full ${
+                        new Date(journey.departureTime) > new Date()
+                          ? "bg-green-100 text-green-600"
+                          : "bg-gray-300 text-gray-600"
+                      }`}
+                    >
+                      {new Date(journey.departureTime) > new Date()
+                        ? "Scheduled"
+                        : "Departed"}
+                    </span>
+                  </td>
+                  <td className="px-4 py-3 flex justify-end gap-3">
+                    <Link
+                      to={`/admin/buses/edit/${journey.id}`}
+                      className="text-blue-600 hover:text-blue-800"
+                    >
+                      <Edit2 className="w-4 h-4" />
+                    </Link>
+                    <button className="text-red-600 hover:text-red-800">
+                      <Trash2 className="w-4 h-4" />
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        )}
       </div>
     </section>
   )
