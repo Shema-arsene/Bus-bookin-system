@@ -1,15 +1,21 @@
 import React, { useState } from "react"
 import { Link, useNavigate, useLocation } from "react-router-dom"
 import { Mail, Lock, Eye, EyeOff } from "lucide-react"
+import { useAuth } from "../../context/AuthContext"
 
 const LoginPage = () => {
+  const navigate = useNavigate()
+
+  const { login } = useAuth()
+  const location = useLocation()
+
+  const from = location.state?.from?.pathname || "/"
+
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [showPassword, setShowPassword] = useState(false)
   const [loading, setLoading] = useState(false)
   const [errors, setErrors] = useState({})
-
-  const navigate = useNavigate()
 
   const validate = () => {
     const newErrors = {}
@@ -24,7 +30,18 @@ const LoginPage = () => {
   const handleSubmit = async (e) => {
     e.preventDefault()
 
-    validate()
+    if (!validate()) return
+    setLoading(true)
+    try {
+      await login(email, password)
+      // toast.success("Login successful")
+      navigate(from)
+    } catch (error) {
+      console.error("Login error:", error)
+      // toast.error(error.response?.data?.message || "Login failed")
+    } finally {
+      setLoading(false)
+    }
   }
 
   return (
@@ -120,7 +137,7 @@ const LoginPage = () => {
 
             {/* Remember Me */}
             <div className="flex items-center justify-between">
-              <div className="hidden flex items-center">
+              <div className="hidden items-center">
                 <input
                   id="remember-me"
                   name="remember-me"
