@@ -1,10 +1,14 @@
 import React, { useState } from "react"
 import { Link, useNavigate } from "react-router-dom"
-import { User, Mail, Lock, Eye, EyeOff } from "lucide-react"
+import { User, Mail, Lock, Eye, EyeOff, Phone } from "lucide-react"
+import { useAuth } from "../../context/AuthContext"
 
 const RegisterPage = () => {
+  const { register } = useAuth()
+
   const [fullName, setFullName] = useState("")
   const [email, setEmail] = useState("")
+  const [phone, setPhone] = useState("")
   const [password, setPassword] = useState("")
   const [confirmPassword, setConfirmPassword] = useState("")
   const [showPassword, setShowPassword] = useState(false)
@@ -15,22 +19,31 @@ const RegisterPage = () => {
   const handleSubmit = async (e) => {
     e.preventDefault()
 
-    if (!fullName || !email || !password || !confirmPassword) {
+    if (!fullName || !email || !phone || !password || !confirmPassword) {
       alert("Please fill in all fields")
       return
     }
-
     if (password !== confirmPassword) {
       alert("Passwords do not match")
       return
     }
-
     if (password.length < 6) {
       alert("Password must be at least 6 characters")
       return
     }
 
-    navigate("/")
+    setLoading(true)
+
+    try {
+      await register(fullName, email, password, phone)
+      // toast.success("Registration successful")
+      navigate("/")
+    } catch (error) {
+      console.error("Register error:", error)
+      // toast.error(error.response?.data?.message || "Registration failed")
+    } finally {
+      setLoading(false)
+    }
   }
 
   const toggleShowPassword = () => {
@@ -105,6 +118,32 @@ const RegisterPage = () => {
                   onChange={(e) => setEmail(e.target.value)}
                   className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-blue-600 focus:border-blue-600 sm:text-sm"
                   placeholder="you@example.com"
+                />
+              </div>
+            </div>
+
+            {/* Phone */}
+            <div>
+              <label
+                htmlFor="phone"
+                className="block text-sm font-medium text-black"
+              >
+                Phone number
+              </label>
+              <div className="mt-1 relative rounded-md shadow-sm">
+                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                  <Phone className="h-5 w-5 text-gray-400" />
+                </div>
+                <input
+                  id="phone"
+                  name="phone"
+                  type="tel"
+                  autoComplete="tel"
+                  // required
+                  value={phone}
+                  onChange={(e) => setPhone(e.target.value)}
+                  className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-blue-600 focus:border-blue-600 sm:text-sm"
+                  placeholder="(123) 456-7890"
                 />
               </div>
             </div>
