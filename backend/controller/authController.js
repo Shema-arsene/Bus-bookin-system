@@ -30,10 +30,12 @@ const registerUser = async (req, res) => {
     const user = await User.create({ fullName, email, password, phone })
 
     res.status(201).json({
-      _id: user._id,
-      fullName: user.fullName,
-      email: user.email,
-      phone: user.phone,
+      user: {
+        _id: user._id,
+        fullName: user.fullName,
+        email: user.email,
+        phone: user.phone,
+      },
       token: generateToken(user._id),
     })
   } catch (error) {
