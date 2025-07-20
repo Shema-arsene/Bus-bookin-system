@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router-dom"
 import { User, Mail, Lock, Eye, EyeOff } from "lucide-react"
 
 const RegisterPage = () => {
-  const [fullName, setName] = useState("")
+  const [fullName, setFullName] = useState("")
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [confirmPassword, setConfirmPassword] = useState("")
@@ -76,7 +76,7 @@ const RegisterPage = () => {
                   autoComplete="name"
                   // required
                   value={fullName}
-                  onChange={(e) => setName(e.target.value)}
+                  onChange={(e) => setFullName(e.target.value)}
                   className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-blue-600 focus:border-blue-600 sm:text-sm"
                   placeholder="John Doe"
                 />
