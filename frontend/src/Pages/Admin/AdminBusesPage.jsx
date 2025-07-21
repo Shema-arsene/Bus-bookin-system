@@ -148,7 +148,7 @@ const AdminBusesPage = () => {
                   </td>
                   <td className="px-4 py-3 flex justify-end gap-3">
                     <Link
-                      to={`/admin/buses/edit/${journey.id}`}
+                      to={`/admin/buses/edit/${journey._id}`}
                       className="text-blue-600 hover:text-blue-800"
                     >
                       <Edit2 className="w-4 h-4" />
