@@ -54,6 +54,22 @@ const AdminBusesPage = () => {
     })
   }
 
+  const handleDelete = async (journeyId) => {
+    const confirmDelete = window.confirm(
+      "Are you sure you want to delete this journey?"
+    )
+    if (!confirmDelete) return
+
+    try {
+      await axiosInstance.delete(API_PATHS.JOURNEYS.DELETE_JOURNEY(journeyId))
+      setJourneys((prev) => prev.filter((j) => j._id !== journeyId))
+      alert("Journey deleted successfully.")
+    } catch (error) {
+      console.error("Error deleting journey:", error)
+      alert("Failed to delete journey")
+    }
+  }
+
   const LoadingSpinner = () => (
     <div className="flex justify-center items-center h-[70vh]">
       <div className="w-16 h-16 border-4 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
@@ -137,7 +153,10 @@ const AdminBusesPage = () => {
                     >
                       <Edit2 className="w-4 h-4" />
                     </Link>
-                    <button className="text-red-600 hover:text-red-800">
+                    <button
+                      onClick={() => handleDelete(journey._id)}
+                      className="text-red-600 hover:text-red-800"
+                    >
                       <Trash2 className="w-4 h-4" />
                     </button>
                   </td>
